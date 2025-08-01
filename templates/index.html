@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AD 预测器</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="container mt-5">
+  <h1 class="mb-4 text-center">阿尔茨海默病（AD）预测器</h1>
+
+  {% if error %}
+  <div class="alert alert-danger" role="alert">
+    {{ error }}
+  </div>
+  {% endif %}
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+          手动输入数据
+        </div>
+        <div class="card-body">
+          <form method="POST">
+            {% for feature in feature_names %}
+            <div class="mb-3">
+              <label for="feature_{{ feature }}" class="form-label">{{ feature }}:</label>
+              <input type="text" class="form-control" id="feature_{{ feature }}" name="feature_{{ feature }}" placeholder="请输入数值，缺失请填 NA">
+              {# 在这里添加描述信息，从 feature_descriptions 字典中获取 #}
+              {% if feature in feature_descriptions %}
+              <div class="form-text text-muted">{{ feature_descriptions[feature] }}</div>
+              {% else %}
+              <div class="form-text text-muted">请输入 {{ feature }} 的值，缺失请填 NA。</div>
+              {% endif %}
+            </div>
+            {% endfor %}
+            <button type="submit" name="submit_manual" class="btn btn-success w-100">提交手动数据</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-info text-white">
+          上传数据集
+        </div>
+        <div class="card-body">
+          <form method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label for="file_upload" class="form-label">选择 CSV 或 Excel 文件:</label>
+              <input type="file" class="form-control" id="file_upload" name="file" accept=".csv, .xls, .xlsx">
+              <div class="form-text text-muted">
+                请确保文件包含以下列：{{ feature_names | join(', ') }}。
+                缺失值可以留空或使用 'NA' 表示。
+              </div>
+            </div>
+            <button type="submit" name="submit_file" class="btn btn-info w-100">上传并预测</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if results_html %}
+  <div class="card shadow-sm mt-4">
+    <div class="card-header bg-success text-white">
+      预测结果
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        {{ results_html | safe }}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
