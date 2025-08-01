@@ -89,7 +89,7 @@ Local Setup and Running
 
 First, clone the project repository to your local machine:
 
-git clone https://github.com/YourUsername/ADPredictionWeb.git # Replace with your GitHub username and repository name
+git clone https://github.com/WaveMonster/ADPredictionWeb.git
 cd ADPredictionWeb
 
 3. Set Up Python Virtual Environment
